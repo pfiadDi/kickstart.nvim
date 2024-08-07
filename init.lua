@@ -388,7 +388,7 @@ require('lazy').setup({
           winblend = 10,
           previewer = false,
         })
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      end, { desc = '[f] Fuzzily search in current buffer' })
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
@@ -666,7 +666,7 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -874,7 +874,30 @@ require('lazy').setup({
       --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
     end,
   },
-
+  {
+    'nvim-tree/nvim-tree.lua',
+    version = '*',
+    lazy = false,
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('nvim-tree').setup {
+        sort = {
+          sorter = 'case_sensitive',
+        },
+        view = {
+          width = 30,
+        },
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = true,
+        },
+      }
+    end,
+  },
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -883,13 +906,15 @@ require('lazy').setup({
   --
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
+  --  NOTE: das required files in kickstart/plugins und lädt bzw konfiguriert plugins
   --
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  --
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -920,11 +945,12 @@ require('lazy').setup({
 })
 
 -- NOTE: Thomas My personal key maps
-vim.keymap.set('n', 's', ':w <enter>')
+vim.keymap.set('n', 's', ':w<enter>')
 vim.keymap.set('n', 'ög', 'a{}<Esc>i', { desc = 'J[Ö]h eine [G]eschwungene Klammer' })
 vim.keymap.set('n', 'ös', 'a{}<Esc>i', { desc = 'J[Ö]h eine [G]eschwungene Klammer' })
 vim.keymap.set('n', 'öe', 'a[]<Esc>i', { desc = 'J[Ö] eine [E]ckige Klammer' })
-vim.keymap.set('i', '<C-z>', '<Esc>', { desc = 'Back to normal mode', remap = true })
+vim.keymap.set('i', '<C-l>', '<Esc>', { desc = 'Back to normal mode', remap = true })
+vim.keymap.set('n', '<leader>o', ':NvimTreeOpen<enter>', { desc = '[O]pen Files' })
 vim.treesitter.language.register('html', 'handlebars')
 --  {Hallo}The  [lasd]line be {sldkfskldf}neath thealled `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

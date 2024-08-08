@@ -615,7 +615,8 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua',
+        'prettier', -- Used to format Lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -649,6 +650,7 @@ require('lazy').setup({
       },
     },
     opts = {
+      formatters = { 'prettier' },
       notify_on_error = false,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
@@ -660,13 +662,18 @@ require('lazy').setup({
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
         }
       end,
+      ft_parsers = {
+        handlebars = 'glimmer',
+      },
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        -- javascript = { 'prettier', 'prettierd', stop_after_first = true },
+        typescript = { 'prettier', stop_after_first = true },
+        handlebars = { 'prettier', stop_after_first = true },
       },
     },
   },
@@ -943,13 +950,12 @@ require('lazy').setup({
     },
   },
 })
-
 -- NOTE: Thomas My personal key maps
 vim.keymap.set('n', 's', ':w<enter>')
 vim.keymap.set('n', 'ög', 'a{}<Esc>i', { desc = 'J[Ö]h eine [G]eschwungene Klammer' })
 vim.keymap.set('n', 'ös', 'a{}<Esc>i', { desc = 'J[Ö]h eine [G]eschwungene Klammer' })
 vim.keymap.set('n', 'öe', 'a[]<Esc>i', { desc = 'J[Ö] eine [E]ckige Klammer' })
-vim.keymap.set('i', '<C-l>', '<Esc>', { desc = 'Back to normal mode', remap = true })
+vim.keymap.set('i', '<C-z>', '<Esc>', { desc = 'Back to normal mode' })
 vim.keymap.set('n', '<leader>o', ':NvimTreeOpen<enter>', { desc = '[O]pen Files' })
 vim.treesitter.language.register('html', 'handlebars')
 --  {Hallo}The  [lasd]line be {sldkfskldf}neath thealled `modeline`. See `:help modeline`

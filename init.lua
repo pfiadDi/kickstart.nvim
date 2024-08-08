@@ -656,7 +656,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true, html = true }
+        local disable_filetypes = { c = true, cpp = true }
         return {
           timeout_ms = 500,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
@@ -955,7 +955,8 @@ vim.keymap.set('n', 's', ':w<enter>')
 vim.keymap.set('n', 'ög', 'a{}<Esc>i', { desc = 'J[Ö]h eine [G]eschwungene Klammer' })
 vim.keymap.set('n', 'ös', 'a{}<Esc>i', { desc = 'J[Ö]h eine [G]eschwungene Klammer' })
 vim.keymap.set('n', 'öe', 'a[]<Esc>i', { desc = 'J[Ö] eine [E]ckige Klammer' })
-vim.keymap.set('i', '<C-z>', '<Esc>', { desc = 'Back to normal mode' })
+vim.keymap.set('i', 'ii', '<Esc>', { desc = 'Back to normal mode' })
+vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Back to normal mode' })
 vim.keymap.set('n', '<leader>o', ':NvimTreeOpen<enter>', { desc = '[O]pen Files' })
 vim.treesitter.language.register('html', 'handlebars')
 --  {Hallo}The  [lasd]line be {sldkfskldf}neath thealled `modeline`. See `:help modeline`

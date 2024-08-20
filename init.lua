@@ -574,7 +574,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -614,9 +614,12 @@ require('lazy').setup({
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
+      --
+      -- NOTE: Install FORMATTERS
+      --
       vim.list_extend(ensure_installed, {
-        'stylua',
-        'prettier', -- Used to format Lua code
+        'stylua', -- Used to format Lua code
+        'prettier',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -650,13 +653,13 @@ require('lazy').setup({
       },
     },
     opts = {
-      formatters = { 'prettier' },
+      formatters = { 'prettier', 'gofmt', 'goimports', 'golines' },
       notify_on_error = false,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = { c = true, cpp = true, go = true }
         return {
           timeout_ms = 500,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
@@ -672,6 +675,7 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { 'prettier', 'prettierd', stop_after_first = true },
+        go = { 'gofmt', 'golines' },
         typescript = { 'prettier', stop_after_first = true },
         json = { 'prettier', stop_after_first = true },
         handlebars = { 'prettier', stop_after_first = true },
@@ -959,6 +963,10 @@ vim.keymap.set('n', 'öe', 'a[]<Esc>i', { desc = 'J[Ö] eine [E]ckige Klammer' }
 vim.keymap.set('i', 'ii', '<Esc>', { desc = 'Back to normal mode' })
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Back to normal mode' })
 vim.keymap.set('n', '<leader>o', ':NvimTreeOpen<enter>', { desc = '[O]pen Files' })
+vim.keymap.set('v', '<leader>r', ":<','>w !node<enter>", { desc = '[R]un node' })
+vim.keymap.set('n', ',fl', ':ConformInfo<enter>', { desc = '[F]ormat [L]ogs' })
+vim.keymap.set('n', '<leader>a', 'gg0vGg_y', { desc = 'yank [A]ll' })
 vim.treesitter.language.register('html', 'handlebars')
+
 --  {Hallo}The  [lasd]line be {sldkfskldf}neath thealled `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

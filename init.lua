@@ -102,7 +102,7 @@ vim.g.have_nerd_font = true
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -966,6 +966,7 @@ vim.keymap.set('n', '<leader>o', ':NvimTreeOpen<enter>', { desc = '[O]pen Files'
 vim.keymap.set('v', '<leader>r', ":<','>w !node<enter>", { desc = '[R]un node' })
 vim.keymap.set('n', ',fl', ':ConformInfo<enter>', { desc = '[F]ormat [L]ogs' })
 vim.keymap.set('n', '<leader>a', 'gg0vGg_y', { desc = 'yank [A]ll' })
+vim.keymap.set('n', '<leader>p', 'gg0vGg_p', { desc = '[P]aste all' })
 vim.treesitter.language.register('html', 'handlebars')
 
 --  {Hallo}The  [lasd]line be {sldkfskldf}neath thealled `modeline`. See `:help modeline`

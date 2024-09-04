@@ -585,6 +585,25 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
+        elmls = {
+          filetypes = { 'elm' },
+          init_options = {
+            disableElmLSDiagnostics = false,
+            elmReviewDiagnostics = 'off',
+            onlyUpdateDiagnosticsOnSave = false,
+            skipInstallPackageConfirmation = false,
+          },
+          cmd = { 'elm-language-server' },
+        },
+        ols = {
+          filetypes = { 'odin' },
+          settings = {
+            ols = {
+              enable_inlay_hints = true,
+              enable_hover = true,
+            },
+          },
+        },
         tsserver = {},
         html = {},
         lua_ls = {
@@ -620,6 +639,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'prettier',
+        'elm-format',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -653,7 +673,7 @@ require('lazy').setup({
       },
     },
     opts = {
-      formatters = { 'prettier', 'gofmt', 'goimports', 'golines' },
+      formatters = { 'prettier', 'gofmt', 'goimports', 'golines', 'djlint', 'elm-format' },
       notify_on_error = false,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
@@ -661,12 +681,12 @@ require('lazy').setup({
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true, go = true }
         return {
-          timeout_ms = 500,
+          timeout_ms = 5000,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
         }
       end,
       ft_parsers = {
-        handlebars = 'glimmer',
+        handlebars = 'djlint',
       },
       formatters_by_ft = {
         lua = { 'stylua' },
@@ -675,10 +695,17 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { 'prettier', 'prettierd', stop_after_first = true },
+        elm = { 'elm-format' },
         go = { 'gofmt', 'golines' },
         typescript = { 'prettier', stop_after_first = true },
         json = { 'prettier', stop_after_first = true },
-        handlebars = { 'prettier', stop_after_first = true },
+        yaml = { 'prettier', stop_after_first = true },
+        md = { 'prettier' },
+        handlebars = { 'djlint', stop_after_first = true },
+      },
+      {
+        -- option for djlint
+        profile = 'handlebars',
       },
     },
   },
@@ -810,7 +837,8 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'mine'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
@@ -910,6 +938,14 @@ require('lazy').setup({
       }
     end,
   },
+  {
+    'iamcco/markdown-preview.nvim',
+    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
+    ft = { 'markdown' },
+    build = function()
+      vim.fn['mkdp#util#install']()
+    end,
+  },
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -957,16 +993,19 @@ require('lazy').setup({
 })
 -- NOTE: Thomas My personal key maps
 vim.keymap.set('n', 's', ':w<enter>')
-vim.keymap.set('n', 'ög', 'a{}<Esc>i', { desc = 'J[Ö]h eine [G]eschwungene Klammer' })
-vim.keymap.set('n', 'ös', 'a{}<Esc>i', { desc = 'J[Ö]h eine [G]eschwungene Klammer' })
-vim.keymap.set('n', 'öe', 'a[]<Esc>i', { desc = 'J[Ö] eine [E]ckige Klammer' })
-vim.keymap.set('i', 'ii', '<Esc>', { desc = 'Back to normal mode' })
-vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Back to normal mode' })
+vim.keymap.set({ 'i' }, 'ös', '{}<Esc>i', { desc = 'J[Ö]h eine ge[S]chwungene Klammer' })
+vim.keymap.set({ 'n' }, 'ös', 'a{}<Esc>i', { desc = 'J[Ö]h eine ge[S]chwungene Klammer' })
+vim.keymap.set({ 'i' }, 'öe', '[]<Esc>i', { desc = 'J[Ö] eine [E]ckige Klammer' })
+vim.keymap.set({ 'n' }, 'öe', 'a[]<Esc>i', { desc = 'J[Ö] eine [E]ckige Klammer' })
+-- vim.keymap.set('i', '  ', '<Esc>', { desc = 'Back to normal mode' })
+-- vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Back to normal mode' })
 vim.keymap.set('n', '<leader>o', ':NvimTreeOpen<enter>', { desc = '[O]pen Files' })
 vim.keymap.set('v', '<leader>r', ":<','>w !node<enter>", { desc = '[R]un node' })
 vim.keymap.set('n', ',fl', ':ConformInfo<enter>', { desc = '[F]ormat [L]ogs' })
 vim.keymap.set('n', '<leader>a', 'gg0vGg_y', { desc = 'yank [A]ll' })
 vim.keymap.set('n', '<leader>p', 'gg0vGg_p', { desc = '[P]aste all' })
+vim.keymap.set('n', 'vm', 'v%', { desc = 'Select matching {[(' })
+vim.keymap.set('n', 'ym', 'y%', { desc = 'Yank matching {[(' })
 vim.treesitter.language.register('html', 'handlebars')
 
 --  {Hallo}The  [lasd]line be {sldkfskldf}neath thealled `modeline`. See `:help modeline`

@@ -993,6 +993,7 @@ require('lazy').setup({
 })
 -- NOTE: Thomas My personal key maps
 vim.keymap.set('n', 's', ':w<enter>')
+vim.keymap.set({ 'n', 'v' }, '-', 'g_', { desc = 'to end of line' })
 vim.keymap.set({ 'i' }, 'ös', '{}<Esc>i', { desc = 'J[Ö]h eine ge[S]chwungene Klammer' })
 vim.keymap.set({ 'n' }, 'ös', 'a{}<Esc>i', { desc = 'J[Ö]h eine ge[S]chwungene Klammer' })
 vim.keymap.set({ 'i' }, 'öe', '[]<Esc>i', { desc = 'J[Ö] eine [E]ckige Klammer' })
@@ -1006,7 +1007,5 @@ vim.keymap.set('n', '<leader>a', 'gg0vGg_y', { desc = 'yank [A]ll' })
 vim.keymap.set('n', '<leader>p', 'gg0vGg_p', { desc = '[P]aste all' })
 vim.keymap.set('n', 'vm', 'v%', { desc = 'Select matching {[(' })
 vim.keymap.set('n', 'ym', 'y%', { desc = 'Yank matching {[(' })
+vim.keymap.set('v', '<leader>s', ':s/\\%V', { desc = '[S]earch and replace in block' })
 vim.treesitter.language.register('html', 'handlebars')
-
---  {Hallo}The  [lasd]line be {sldkfskldf}neath thealled `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et

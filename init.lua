@@ -605,7 +605,7 @@ require('lazy').setup({
             },
           },
         },
-        tsserver = {},
+        ts_ls = {},
         html = {},
         lua_ls = {
           -- cmd = {...},
@@ -641,6 +641,7 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'prettier',
         'elm-format',
+        'ts_ls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -674,7 +675,7 @@ require('lazy').setup({
       },
     },
     opts = {
-      formatters = { 'prettier', 'gofmt', 'goimports', 'golines', 'djlint', 'elm-format' },
+      formatters = { 'prettier', 'gofmt', 'djlint', 'elm-format' },
       notify_on_error = false,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
@@ -889,7 +890,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'javascript', 'elm', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'go', 'c', 'diff', 'html', 'javascript', 'elm', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -937,6 +938,17 @@ require('lazy').setup({
           dotfiles = true,
         },
       }
+    end,
+  },
+  {
+    'akinsho/flutter-tools.nvim',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
+    },
+    config = function()
+      require('flutter-tools').setup {}
     end,
   },
   {
